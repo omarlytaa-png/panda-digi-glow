@@ -1,11 +1,21 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -48,9 +58,46 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <Button className="ml-4" asChild>
-              <Link to="/contact">Get a Quote</Link>
-            </Button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="ml-4 relative h-10 w-10 rounded-full">
+                    <Avatar>
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        {user.email?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      <p className="font-medium text-sm">{user.email}</p>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={signOut} className="cursor-pointer">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button variant="ghost" className="ml-4" asChild>
+                  <Link to="/auth">Sign In</Link>
+                </Button>
+                <Button asChild>
+                  <Link to="/contact">Get a Quote</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -80,11 +127,41 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
-              <Button className="mx-4 mt-2" asChild>
-                <Link to="/contact" onClick={() => setIsOpen(false)}>
-                  Get a Quote
-                </Link>
-              </Button>
+              {user ? (
+                <>
+                  <div className="px-4 py-2 text-sm text-muted-foreground border-t border-border mt-2">
+                    Signed in as {user.email}
+                  </div>
+                  <Button variant="ghost" className="mx-4" asChild>
+                    <Link to="/profile" onClick={() => setIsOpen(false)}>
+                      Profile
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="mx-4"
+                    onClick={() => {
+                      signOut();
+                      setIsOpen(false);
+                    }}
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" className="mx-4 mt-2" asChild>
+                    <Link to="/auth" onClick={() => setIsOpen(false)}>
+                      Sign In
+                    </Link>
+                  </Button>
+                  <Button className="mx-4" asChild>
+                    <Link to="/contact" onClick={() => setIsOpen(false)}>
+                      Get a Quote
+                    </Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         )}
