@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ type UserRole = {
 
 export default function AdminDashboard() {
   const { isAdmin, loading: adminLoading } = useIsAdmin();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [profiles, setProfiles] = useState<Profile[]>([]);
@@ -31,7 +33,10 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('🔐 AdminDashboard - adminLoading:', adminLoading, 'isAdmin:', isAdmin, 'user:', user?.id);
+    
     if (!adminLoading && !isAdmin) {
+      console.log('🚫 Access denied, redirecting to home');
       toast({
         title: "Access Denied",
         description: "You must be an admin to access this page",
@@ -39,7 +44,7 @@ export default function AdminDashboard() {
       });
       navigate("/");
     }
-  }, [isAdmin, adminLoading, navigate, toast]);
+  }, [isAdmin, adminLoading, navigate, toast, user]);
 
   useEffect(() => {
     if (isAdmin) {
