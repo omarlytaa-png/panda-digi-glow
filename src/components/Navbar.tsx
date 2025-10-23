@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X, User, LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +17,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin();
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -76,6 +78,17 @@ const Navbar = () => {
                     </div>
                   </div>
                   <DropdownMenuSeparator />
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="cursor-pointer">
+                          <ShieldCheck className="mr-2 h-4 w-4" />
+                          Admin Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link to="/profile" className="cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
@@ -132,6 +145,14 @@ const Navbar = () => {
                   <div className="px-4 py-2 text-sm text-muted-foreground border-t border-border mt-2">
                     Signed in as {user.email}
                   </div>
+                  {isAdmin && (
+                    <Button variant="ghost" className="mx-4" asChild>
+                      <Link to="/admin" onClick={() => setIsOpen(false)}>
+                        <ShieldCheck className="mr-2 h-4 w-4" />
+                        Admin Dashboard
+                      </Link>
+                    </Button>
+                  )}
                   <Button variant="ghost" className="mx-4" asChild>
                     <Link to="/profile" onClick={() => setIsOpen(false)}>
                       Profile
