@@ -857,14 +857,12 @@ Mobile form completion is challenging:
 - Progress indicators for multi-step forms
 
 **Example: Contact Form**
-```
-[Name         ]  ← Full width
-[Email        ]  ← Email keyboard
-[Phone        ]  ← Numeric keyboard
-[Message      ]  ← Large text area
-              
-[Submit Button]  ← Full width, prominent
-```
+
+- Name field (Full width)
+- Email field (Email keyboard)
+- Phone field (Numeric keyboard)
+- Message field (Large text area)
+- Submit Button (Full width, prominent)
 
 ## Mobile-First vs. Responsive Design
 
