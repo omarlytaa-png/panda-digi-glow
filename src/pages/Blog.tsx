@@ -1,51 +1,10 @@
-import { Calendar, User } from "lucide-react";
+import { Calendar, User, Clock, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { blogPosts } from "@/data/blogPosts";
 
 const Blog = () => {
-  const posts = [
-    {
-      title: "Web Design Trends 2025: What's Hot in Kenya",
-      excerpt: "Discover the latest web design trends shaping the Kenyan digital landscape in 2025. From minimalism to bold typography.",
-      author: "Panda Tech Team",
-      date: "March 15, 2025",
-      category: "Web Design",
-    },
-    {
-      title: "Cybersecurity for Small Businesses: A Practical Guide",
-      excerpt: "Essential cybersecurity practices every small business in Kenya should implement to protect their data and customers.",
-      author: "Security Team",
-      date: "March 10, 2025",
-      category: "Cybersecurity",
-    },
-    {
-      title: "How to Choose the Right CRM for Your Business",
-      excerpt: "A comprehensive guide to selecting and implementing the perfect CRM system for your growing business.",
-      author: "Development Team",
-      date: "March 5, 2025",
-      category: "Software",
-    },
-    {
-      title: "The Power of Brand Identity: Why Your Logo Matters",
-      excerpt: "Understanding how strong brand identity can transform your business and attract the right customers.",
-      author: "Design Team",
-      date: "February 28, 2025",
-      category: "Branding",
-    },
-    {
-      title: "Mobile-First Design: Why It's Essential in 2025",
-      excerpt: "Why prioritizing mobile users is crucial for your website's success in today's smartphone-dominated world.",
-      author: "Panda Tech Team",
-      date: "February 20, 2025",
-      category: "Mobile",
-    },
-    {
-      title: "IT Support Best Practices for Growing Companies",
-      excerpt: "How to set up reliable IT support infrastructure as your company scales and technology needs evolve.",
-      author: "IT Team",
-      date: "February 15, 2025",
-      category: "IT Services",
-    },
-  ];
 
   return (
     <div className="min-h-screen pt-24 pb-16">
@@ -60,8 +19,8 @@ const Blog = () => {
 
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post, index) => (
-            <Card key={index} className="shadow-card hover:shadow-hover transition-smooth">
+          {blogPosts.map((post) => (
+            <Card key={post.id} className="shadow-card hover:shadow-hover transition-smooth flex flex-col">
               <CardHeader>
                 <div className="mb-3">
                   <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">
@@ -70,18 +29,30 @@ const Blog = () => {
                 </div>
                 <CardTitle className="text-xl mb-2">{post.title}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">{post.excerpt}</p>
-                <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <CardContent className="flex-1 flex flex-col">
+                <p className="text-muted-foreground mb-4 flex-1">{post.excerpt}</p>
+                <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
                   <div className="flex items-center">
                     <User size={14} className="mr-1" />
                     <span>{post.author}</span>
                   </div>
                   <div className="flex items-center">
+                    <Clock size={14} className="mr-1" />
+                    <span>{post.readTime}</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
+                  <div className="flex items-center">
                     <Calendar size={14} className="mr-1" />
                     <span>{post.date}</span>
                   </div>
                 </div>
+                <Link to={`/blog/${post.id}`}>
+                  <Button variant="outline" className="w-full">
+                    Read Full Article
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}
