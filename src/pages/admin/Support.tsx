@@ -1,181 +1,235 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Mail, AlertCircle, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Loader2, Mail, AlertCircle } from "lucide-react";
+
+interface SupportTicket {
+  id: string;
+  user_name: string;
+  user_email: string;
+  subject: string;
+  message: string;
+  status: string;
+  priority: string;
+  created_at: string;
+}
 
 export default function Support() {
+  const [tickets, setTickets] = useState<SupportTicket[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchTickets();
+
+    // Set up realtime subscription
+    const channel = supabase
+      .channel('support_tickets_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'support_tickets'
+        },
+        () => {
+          fetchTickets();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchTickets = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('support_tickets')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setTickets(data || []);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch support tickets",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateTicketStatus = async (id: string, status: string) => {
+    try {
+      const { error } = await supabase
+        .from('support_tickets')
+        .update({ status })
+        .eq('id', id);
+
+      if (error) throw error;
+      toast({ title: "Ticket status updated" });
+      fetchTickets();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const updateTicketPriority = async (id: string, priority: string) => {
+    try {
+      const { error } = await supabase
+        .from('support_tickets')
+        .update({ priority })
+        .eq('id', id);
+
+      if (error) throw error;
+      toast({ title: "Ticket priority updated" });
+      fetchTickets();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
+  const openTickets = tickets.filter(t => t.status === 'open').length;
+  const inProgressTickets = tickets.filter(t => t.status === 'in_progress').length;
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-3xl font-bold tracking-tight">Support & Communication</h2>
         <p className="text-muted-foreground">
-          Manage user inquiries and feedback
+          Manage customer support requests
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Open Tickets</CardTitle>
-            <MessageSquare className="h-4 w-4 text-yellow-600" />
+            <AlertCircle className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">Awaiting response</p>
+            <div className="text-2xl font-bold">{openTickets}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Resolved</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-600" />
+            <CardTitle className="text-sm font-medium">In Progress</CardTitle>
+            <Loader2 className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">148</div>
-            <p className="text-xs text-muted-foreground">This month</p>
+            <div className="text-2xl font-bold">{inProgressTickets}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Contact Forms</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Tickets</CardTitle>
             <Mail className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">New submissions</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg. Response</CardTitle>
-            <AlertCircle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2.4h</div>
-            <p className="text-xs text-muted-foreground">Response time</p>
+            <div className="text-2xl font-bold">{tickets.length}</div>
           </CardContent>
         </Card>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Contact Form Submissions</CardTitle>
-          <CardDescription>Latest inquiries from your contact page</CardDescription>
+          <CardTitle>All Tickets</CardTitle>
+          <CardDescription>View and manage support tickets</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {[
-              {
-                name: "John Smith",
-                email: "john@example.com",
-                subject: "Website Development Inquiry",
-                time: "10 minutes ago",
-                status: "new",
-              },
-              {
-                name: "Sarah Johnson",
-                email: "sarah@company.com",
-                subject: "Security Consultation",
-                time: "1 hour ago",
-                status: "in-progress",
-              },
-              {
-                name: "Mike Davis",
-                email: "mike@startup.io",
-                subject: "UI/UX Design Services",
-                time: "3 hours ago",
-                status: "in-progress",
-              },
-              {
-                name: "Emily Brown",
-                email: "emily@business.com",
-                subject: "General Question",
-                time: "5 hours ago",
-                status: "resolved",
-              },
-            ].map((submission, index) => (
-              <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-medium">{submission.name}</h4>
-                    <Badge
-                      variant="outline"
-                      className={
-                        submission.status === "new"
-                          ? "bg-blue-50 text-blue-700"
-                          : submission.status === "in-progress"
-                          ? "bg-yellow-50 text-yellow-700"
-                          : "bg-green-50 text-green-700"
-                      }
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>User</TableHead>
+                <TableHead>Subject</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Priority</TableHead>
+                <TableHead>Created</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {tickets.map((ticket) => (
+                <TableRow key={ticket.id}>
+                  <TableCell>
+                    <div>
+                      <div className="font-medium">{ticket.user_name}</div>
+                      <div className="text-sm text-muted-foreground">{ticket.user_email}</div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div>
+                      <div className="font-medium">{ticket.subject}</div>
+                      <div className="text-sm text-muted-foreground line-clamp-1">
+                        {ticket.message}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Select
+                      value={ticket.status}
+                      onValueChange={(value) => updateTicketStatus(ticket.id, value)}
                     >
-                      {submission.status.replace("-", " ")}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{submission.email}</p>
-                  <p className="text-sm font-medium mt-1">{submission.subject}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{submission.time}</p>
-                </div>
-                <Button variant="outline" size="sm">
-                  View Details
-                </Button>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Feedback & Bug Reports</CardTitle>
-          <CardDescription>User-submitted feedback and issues</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {[
-              {
-                user: "user@example.com",
-                type: "Feature Request",
-                message: "Would love to see dark mode support",
-                priority: "medium",
-              },
-              {
-                user: "test@example.com",
-                type: "Bug Report",
-                message: "Contact form not submitting on mobile",
-                priority: "high",
-              },
-              {
-                user: "feedback@user.com",
-                type: "Feedback",
-                message: "Great website design!",
-                priority: "low",
-              },
-            ].map((item, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 border rounded-lg">
-                <AlertCircle
-                  className={`h-5 w-5 mt-0.5 ${
-                    item.priority === "high"
-                      ? "text-red-600"
-                      : item.priority === "medium"
-                      ? "text-yellow-600"
-                      : "text-blue-600"
-                  }`}
-                />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-medium">{item.type}</h4>
-                    <Badge variant="outline" className="text-xs">
-                      {item.priority}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">{item.message}</p>
-                  <p className="text-xs text-muted-foreground mt-1">From: {item.user}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="open">Open</SelectItem>
+                        <SelectItem value="in_progress">In Progress</SelectItem>
+                        <SelectItem value="resolved">Resolved</SelectItem>
+                        <SelectItem value="closed">Closed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    <Select
+                      value={ticket.priority}
+                      onValueChange={(value) => updateTicketPriority(ticket.id, value)}
+                    >
+                      <SelectTrigger className="w-28">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                        <SelectItem value="urgent">Urgent</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    {new Date(ticket.created_at).toLocaleDateString()}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>

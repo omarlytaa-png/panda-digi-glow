@@ -20,9 +20,11 @@ export default function Overview() {
 
   const fetchStats = async () => {
     try {
-      const [profilesRes, rolesRes] = await Promise.all([
+      const [profilesRes, rolesRes, postsRes, ticketsRes] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact" }),
         supabase.from("user_roles").select("*"),
+        supabase.from("blog_posts").select("*", { count: "exact" }),
+        supabase.from("support_tickets").select("*", { count: "exact" }).eq('status', 'open'),
       ]);
 
       const sevenDaysAgo = new Date();
@@ -38,7 +40,7 @@ export default function Overview() {
         admins: rolesRes.data?.filter((r) => r.role === "admin").length || 0,
         moderators: rolesRes.data?.filter((r) => r.role === "moderator").length || 0,
         recentSignups: recentUsers.count || 0,
-        totalPosts: 6, // From blog posts
+        totalPosts: postsRes.count || 0,
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
