@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Code, Palette, Shield, FileText, ArrowRight, CheckCircle } from "lucide-react";
 import ServiceCard from "@/components/ServiceCard";
 import PortfolioCard from "@/components/PortfolioCard";
-import heroImage from "@/assets/hero-image.jpg";
+import heroImage from "@/assets/hero-workspace.jpg";
 import portfolioWeb from "@/assets/portfolio-web.jpg";
 import portfolioDesign from "@/assets/portfolio-design.jpg";
 import portfolioSecurity from "@/assets/portfolio-security.jpg";
