@@ -1,114 +1,42 @@
-import { Code, Smartphone, Database, ShoppingCart, Palette, FileImage, Award, FileText, Shield, Network, HardDrive, BookOpen } from "lucide-react";
+import { useEffect, useState } from "react";
+import * as LucideIcons from "lucide-react";
 import ServiceCard from "@/components/ServiceCard";
+import { supabase } from "@/integrations/supabase/client";
 
 const Services = () => {
-  const webSoftwareServices = [
-    {
-      icon: Code,
-      title: "Website Development",
-      description: "Professional, responsive websites that work perfectly on all devices.",
-      features: ["Custom Website Design", "E-commerce Solutions", "Content Management Systems", "Website Maintenance"],
-    },
-    {
-      icon: Smartphone,
-      title: "Mobile App Development",
-      description: "Native and cross-platform mobile applications for iOS and Android.",
-      features: ["iOS & Android Apps", "Cross-platform Solutions", "App Store Deployment", "App Maintenance"],
-    },
-    {
-      icon: Database,
-      title: "CRM Systems",
-      description: "Custom CRM solutions to manage your customer relationships effectively.",
-      features: ["Custom CRM Development", "Integration Services", "Data Migration", "Training & Support"],
-    },
-    {
-      icon: ShoppingCart,
-      title: "Custom Software",
-      description: "Tailored software solutions for your unique business requirements.",
-      features: ["Enterprise Software", "Automation Tools", "API Integration", "Cloud Solutions"],
-    },
-  ];
+  const [services, setServices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const designServices = [
-    {
-      icon: Palette,
-      title: "Brand Identity",
-      description: "Complete branding packages that make your business stand out.",
-      features: ["Logo Design", "Brand Guidelines", "Business Cards", "Letterheads"],
-    },
-    {
-      icon: FileImage,
-      title: "Marketing Materials",
-      description: "Eye-catching designs for all your marketing needs.",
-      features: ["Flyers & Brochures", "Posters & Banners", "Social Media Graphics", "Email Templates"],
-    },
-    {
-      icon: Award,
-      title: "Certificate Design",
-      description: "Professional certificate designs and replacements.",
-      features: ["Custom Certificates", "Award Designs", "Certificate Printing", "Digital Certificates"],
-    },
-    {
-      icon: Palette,
-      title: "Creative Design",
-      description: "All types of graphic design services for your business.",
-      features: ["Packaging Design", "Infographics", "Presentation Design", "Event Materials"],
-    },
-  ];
+  useEffect(() => {
+    fetchServices();
+  }, []);
 
-  const cyberServices = [
-    {
-      icon: Shield,
-      title: "Cybersecurity",
-      description: "Comprehensive security solutions to protect your digital assets.",
-      features: ["Security Audits", "Threat Detection", "Data Protection", "Security Training"],
-    },
-    {
-      icon: Network,
-      title: "Network Setup",
-      description: "Professional network infrastructure design and implementation.",
-      features: ["Network Design", "Server Setup", "WiFi Solutions", "Network Monitoring"],
-    },
-    {
-      icon: HardDrive,
-      title: "IT Support",
-      description: "Reliable IT support to keep your business running smoothly.",
-      features: ["24/7 Support", "System Maintenance", "Hardware Support", "Software Support"],
-    },
-    {
-      icon: Shield,
-      title: "Data Backup",
-      description: "Secure backup solutions to protect your critical business data.",
-      features: ["Cloud Backup", "Local Backup", "Disaster Recovery", "Data Migration"],
-    },
-  ];
+  const fetchServices = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("services")
+        .select("*")
+        .eq("active", true)
+        .order("display_order");
 
-  const documentationServices = [
-    {
-      icon: FileText,
-      title: "Business Documentation",
-      description: "Professional documentation for your business needs.",
-      features: ["Business Reports", "Company Profiles", "Proposals", "Tender Documents"],
-    },
-    {
-      icon: BookOpen,
-      title: "Academic Projects",
-      description: "Support for academic project documentation and presentation.",
-      features: ["Research Papers", "Project Reports", "Presentations", "Technical Writing"],
-    },
-    {
-      icon: FileText,
-      title: "Project Documentation",
-      description: "Comprehensive project documentation services.",
-      features: ["User Manuals", "Technical Documentation", "API Documentation", "Training Materials"],
-    },
-    {
-      icon: Award,
-      title: "Professional Services",
-      description: "Additional professional documentation services.",
-      features: ["CVs & Resumes", "Cover Letters", "Portfolio Design", "Case Studies"],
-    },
-  ];
+      if (error) throw error;
+
+      const servicesWithIcons = (data || []).map((service) => ({
+        ...service,
+        icon: (LucideIcons as any)[service.icon] || LucideIcons.Code,
+      }));
+
+      setServices(servicesWithIcons);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-16">
@@ -121,65 +49,12 @@ const Services = () => {
           </p>
         </div>
 
-        {/* Web & Software Development */}
-        <section className="mb-20">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold mb-4">Web & Software Development</h2>
-            <p className="text-muted-foreground text-lg">
-              Custom digital solutions built with the latest technologies
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {webSoftwareServices.map((service, index) => (
-              <ServiceCard key={index} {...service} />
-            ))}
-          </div>
-        </section>
-
-        {/* Graphic Design & Branding */}
-        <section className="mb-20">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold mb-4">Graphic Design & Branding</h2>
-            <p className="text-muted-foreground text-lg">
-              Creative designs that bring your brand vision to life
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {designServices.map((service, index) => (
-              <ServiceCard key={index} {...service} />
-            ))}
-          </div>
-        </section>
-
-        {/* Cyber & IT Services */}
-        <section className="mb-20">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold mb-4">Cyber & IT Services</h2>
-            <p className="text-muted-foreground text-lg">
-              Secure and reliable IT infrastructure for your business
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {cyberServices.map((service, index) => (
-              <ServiceCard key={index} {...service} />
-            ))}
-          </div>
-        </section>
-
-        {/* Projects & Documentation */}
-        <section className="mb-20">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold mb-4">Projects & Documentation</h2>
-            <p className="text-muted-foreground text-lg">
-              Professional documentation services for all your needs
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {documentationServices.map((service, index) => (
-              <ServiceCard key={index} {...service} />
-            ))}
-          </div>
-        </section>
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+          {services.map((service) => (
+            <ServiceCard key={service.id} {...service} />
+          ))}
+        </div>
 
         {/* CTA */}
         <section className="bg-primary text-primary-foreground p-12 rounded-lg text-center">

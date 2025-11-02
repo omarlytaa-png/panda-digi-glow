@@ -1,47 +1,35 @@
+import { useEffect, useState } from "react";
 import PortfolioCard from "@/components/PortfolioCard";
-import portfolioWeb from "@/assets/portfolio-web.jpg";
-import portfolioDesign from "@/assets/portfolio-design.jpg";
-import portfolioSecurity from "@/assets/portfolio-security.jpg";
+import { supabase } from "@/integrations/supabase/client";
 
 const Portfolio = () => {
-  const projects = [
-    {
-      image: portfolioWeb,
-      title: "E-Commerce Platform",
-      category: "Web Development",
-      description: "A modern online store with payment integration and inventory management.",
-    },
-    {
-      image: portfolioDesign,
-      title: "Brand Identity Package",
-      category: "Graphic Design",
-      description: "Complete branding solution including logo, business cards, and marketing materials.",
-    },
-    {
-      image: portfolioSecurity,
-      title: "Network Security System",
-      category: "Cybersecurity",
-      description: "Enterprise-grade security implementation for a financial services company.",
-    },
-    {
-      image: portfolioWeb,
-      title: "Mobile Banking App",
-      category: "Mobile Development",
-      description: "Secure mobile banking application with biometric authentication.",
-    },
-    {
-      image: portfolioDesign,
-      title: "Restaurant Branding",
-      category: "Graphic Design",
-      description: "Complete visual identity including menu design and signage for a restaurant chain.",
-    },
-    {
-      image: portfolioWeb,
-      title: "CRM System",
-      category: "Software Development",
-      description: "Custom CRM solution for a real estate company managing 1000+ properties.",
-    },
-  ];
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("portfolio_items")
+        .select("*")
+        .eq("active", true)
+        .order("display_order");
+
+      if (error) throw error;
+      setProjects(data || []);
+    } catch (error) {
+      console.error("Error fetching portfolio:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-16">
@@ -56,8 +44,14 @@ const Portfolio = () => {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <PortfolioCard key={index} {...project} />
+          {projects.map((project) => (
+            <PortfolioCard 
+              key={project.id}
+              image={project.image_url}
+              title={project.title}
+              category={project.category}
+              description={project.description}
+            />
           ))}
         </div>
 

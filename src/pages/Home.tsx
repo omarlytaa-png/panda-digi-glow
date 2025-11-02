@@ -1,61 +1,47 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Code, Palette, Shield, FileText, ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight, CheckCircle } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import ServiceCard from "@/components/ServiceCard";
 import PortfolioCard from "@/components/PortfolioCard";
 import heroImage from "@/assets/hero-workspace.jpg";
-import portfolioWeb from "@/assets/portfolio-web.jpg";
-import portfolioDesign from "@/assets/portfolio-design.jpg";
-import portfolioSecurity from "@/assets/portfolio-security.jpg";
+import { supabase } from "@/integrations/supabase/client";
 
 const Home = () => {
-  const services = [
-    {
-      icon: Code,
-      title: "Web & Software Development",
-      description: "Custom websites, mobile apps, CRMs, and enterprise software solutions.",
-      features: ["Responsive Websites", "Mobile Applications", "Custom CRM Systems", "E-commerce Solutions"],
-    },
-    {
-      icon: Palette,
-      title: "Graphic Design & Branding",
-      description: "Professional designs that make your brand stand out from the competition.",
-      features: ["Logo Design", "Brand Identity", "Flyers & Posters", "Certificate Design"],
-    },
-    {
-      icon: Shield,
-      title: "Cyber & IT Services",
-      description: "Comprehensive cybersecurity and IT support to protect your business.",
-      features: ["Cybersecurity Solutions", "Network Setup", "IT Support", "Data Protection"],
-    },
-    {
-      icon: FileText,
-      title: "Projects & Documentation",
-      description: "Professional documentation services for your business and academic needs.",
-      features: ["Business Reports", "Project Proposals", "Company Profiles", "Academic Projects"],
-    },
-  ];
+  const [services, setServices] = useState<any[]>([]);
+  const [portfolioItems, setPortfolioItems] = useState<any[]>([]);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const featuredProjects = [
-    {
-      image: portfolioWeb,
-      title: "E-Commerce Platform",
-      category: "Web Development",
-      description: "A modern online store with payment integration and inventory management.",
-    },
-    {
-      image: portfolioDesign,
-      title: "Brand Identity Package",
-      category: "Graphic Design",
-      description: "Complete branding solution including logo, business cards, and marketing materials.",
-    },
-    {
-      image: portfolioSecurity,
-      title: "Network Security System",
-      category: "Cybersecurity",
-      description: "Enterprise-grade security implementation for a financial services company.",
-    },
-  ];
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [servicesRes, portfolioRes, testimonialsRes] = await Promise.all([
+        supabase.from("services").select("*").eq("active", true).order("display_order").limit(4),
+        supabase.from("portfolio_items").select("*").eq("active", true).eq("featured", true).order("display_order").limit(3),
+        supabase.from("testimonials").select("*").eq("active", true).order("display_order").limit(2),
+      ]);
+
+      if (servicesRes.data) {
+        const servicesWithIcons = servicesRes.data.map((service) => ({
+          ...service,
+          icon: (LucideIcons as any)[service.icon] || LucideIcons.Code,
+        }));
+        setServices(servicesWithIcons);
+      }
+      
+      if (portfolioRes.data) setPortfolioItems(portfolioRes.data);
+      if (testimonialsRes.data) setTestimonials(testimonialsRes.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const reasons = [
     "10+ Years of Combined Experience",
@@ -66,18 +52,9 @@ const Home = () => {
     "Free Consultation",
   ];
 
-  const testimonials = [
-    {
-      name: "Sarah Mwangi",
-      role: "CEO, TechStart Kenya",
-      content: "Panda Tech transformed our digital presence. Their team is professional, creative, and delivers on time.",
-    },
-    {
-      name: "John Ochieng",
-      role: "Founder, Creative Hub",
-      content: "Excellent service! They built our website and mobile app from scratch. Highly recommended!",
-    },
-  ];
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen">
@@ -166,8 +143,14 @@ const Home = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProjects.map((project, index) => (
-              <PortfolioCard key={index} {...project} />
+            {portfolioItems.map((project) => (
+              <PortfolioCard 
+                key={project.id} 
+                image={project.image_url}
+                title={project.title}
+                category={project.category}
+                description={project.description}
+              />
             ))}
           </div>
           <div className="text-center mt-12">

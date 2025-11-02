@@ -25,6 +25,9 @@ import Developer from "./pages/admin/Developer";
 import Support from "./pages/admin/Support";
 import Appearance from "./pages/admin/Appearance";
 import Advanced from "./pages/admin/Advanced";
+import ServicesManagement from "./pages/admin/ServicesManagement";
+import PortfolioManagement from "./pages/admin/PortfolioManagement";
+import TestimonialsManagement from "./pages/admin/TestimonialsManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +45,9 @@ const App = () => (
             <Route index element={<Overview />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="content" element={<ContentManagement />} />
+            <Route path="services" element={<ServicesManagement />} />
+            <Route path="portfolio" element={<PortfolioManagement />} />
+            <Route path="testimonials" element={<TestimonialsManagement />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="settings" element={<Settings />} />
             <Route path="security" element={<Security />} />
