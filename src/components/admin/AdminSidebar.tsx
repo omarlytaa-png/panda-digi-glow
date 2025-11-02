@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import {
+  Home,
   LayoutDashboard,
   Users,
   FileText,
@@ -25,6 +26,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const menuItems = [
+  { title: "Back to Home", url: "/", icon: Home, end: true },
   { title: "Overview", url: "/admin", icon: LayoutDashboard, end: true },
   { title: "User Management", url: "/admin/users", icon: Users },
   { title: "Content (CMS)", url: "/admin/content", icon: FileText },
