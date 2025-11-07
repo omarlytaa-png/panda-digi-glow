@@ -201,7 +201,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Email</h3>
-                    <p className="text-muted-foreground">info@pandatech.co.ke</p>
+                    <p className="text-muted-foreground">info@labankhisa.co.ke</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">

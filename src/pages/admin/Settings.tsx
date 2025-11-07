@@ -1,12 +1,64 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Save } from "lucide-react";
+import { Save, Loader2 } from "lucide-react";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 export default function Settings() {
+  const { settings, loading, updateMultipleSettings, updateSetting } = useSiteSettings();
+  const [generalInfo, setGeneralInfo] = useState({
+    siteName: "",
+    siteDescription: "",
+    contactEmail: "",
+    phone: "",
+  });
+  const [seoSettings, setSeoSettings] = useState({
+    metaTitle: "",
+    metaDescription: "",
+    keywords: "",
+  });
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!loading) {
+      setGeneralInfo({
+        siteName: settings.siteName,
+        siteDescription: settings.siteDescription,
+        contactEmail: settings.contactEmail,
+        phone: settings.phone,
+      });
+      setSeoSettings({
+        metaTitle: settings.metaTitle,
+        metaDescription: settings.metaDescription,
+        keywords: settings.keywords,
+      });
+    }
+  }, [loading, settings]);
+
+  const handleSaveGeneral = async () => {
+    setSaving(true);
+    await updateMultipleSettings(generalInfo);
+    setSaving(false);
+  };
+
+  const handleSaveSEO = async () => {
+    setSaving(true);
+    await updateMultipleSettings(seoSettings);
+    setSaving(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -24,26 +76,44 @@ export default function Settings() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="site-name">Site Name</Label>
-            <Input id="site-name" defaultValue="KhisaLab" />
+            <Input
+              id="site-name"
+              value={generalInfo.siteName}
+              onChange={(e) => setGeneralInfo({ ...generalInfo, siteName: e.target.value })}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="site-description">Site Description</Label>
             <Textarea
               id="site-description"
-              defaultValue="Professional IT services and solutions"
+              value={generalInfo.siteDescription}
+              onChange={(e) => setGeneralInfo({ ...generalInfo, siteDescription: e.target.value })}
               rows={3}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="contact-email">Contact Email</Label>
-            <Input id="contact-email" type="email" defaultValue="info@khisalab.com" />
+            <Input
+              id="contact-email"
+              type="email"
+              value={generalInfo.contactEmail}
+              onChange={(e) => setGeneralInfo({ ...generalInfo, contactEmail: e.target.value })}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="phone">Phone Number</Label>
-            <Input id="phone" defaultValue="+1 234 567 8900" />
+            <Input
+              id="phone"
+              value={generalInfo.phone}
+              onChange={(e) => setGeneralInfo({ ...generalInfo, phone: e.target.value })}
+            />
           </div>
-          <Button>
-            <Save className="h-4 w-4 mr-2" />
+          <Button onClick={handleSaveGeneral} disabled={saving}>
+            {saving ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4 mr-2" />
+            )}
             Save Changes
           </Button>
         </CardContent>
@@ -57,22 +127,35 @@ export default function Settings() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="meta-title">Meta Title</Label>
-            <Input id="meta-title" defaultValue="KhisaLab - IT Services & Solutions" />
+            <Input
+              id="meta-title"
+              value={seoSettings.metaTitle}
+              onChange={(e) => setSeoSettings({ ...seoSettings, metaTitle: e.target.value })}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="meta-description">Meta Description</Label>
             <Textarea
               id="meta-description"
-              defaultValue="Professional IT services including web development, cybersecurity, and UI/UX design"
+              value={seoSettings.metaDescription}
+              onChange={(e) => setSeoSettings({ ...seoSettings, metaDescription: e.target.value })}
               rows={3}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="keywords">Keywords</Label>
-            <Input id="keywords" defaultValue="IT services, web development, cybersecurity" />
+            <Input
+              id="keywords"
+              value={seoSettings.keywords}
+              onChange={(e) => setSeoSettings({ ...seoSettings, keywords: e.target.value })}
+            />
           </div>
-          <Button>
-            <Save className="h-4 w-4 mr-2" />
+          <Button onClick={handleSaveSEO} disabled={saving}>
+            {saving ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4 mr-2" />
+            )}
             Save SEO Settings
           </Button>
         </CardContent>
@@ -91,7 +174,10 @@ export default function Settings() {
                 Receive email when new users sign up
               </p>
             </div>
-            <Switch defaultChecked />
+            <Switch
+              checked={settings.newUserNotifications}
+              onCheckedChange={(checked) => updateSetting("newUserNotifications", checked)}
+            />
           </div>
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
@@ -100,7 +186,10 @@ export default function Settings() {
                 Get notified of new contact submissions
               </p>
             </div>
-            <Switch defaultChecked />
+            <Switch
+              checked={settings.contactFormNotifications}
+              onCheckedChange={(checked) => updateSetting("contactFormNotifications", checked)}
+            />
           </div>
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
@@ -109,7 +198,10 @@ export default function Settings() {
                 Receive weekly analytics summary
               </p>
             </div>
-            <Switch />
+            <Switch
+              checked={settings.weeklyReports}
+              onCheckedChange={(checked) => updateSetting("weeklyReports", checked)}
+            />
           </div>
         </CardContent>
       </Card>
@@ -127,7 +219,10 @@ export default function Settings() {
                 Show maintenance page to visitors (admins can still access)
               </p>
             </div>
-            <Switch />
+            <Switch
+              checked={settings.maintenanceMode}
+              onCheckedChange={(checked) => updateSetting("maintenanceMode", checked)}
+            />
           </div>
         </CardContent>
       </Card>
