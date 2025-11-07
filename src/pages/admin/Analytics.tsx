@@ -1,7 +1,87 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, Users, Eye, MousePointer, Clock, Globe } from "lucide-react";
+import { TrendingUp, Users, Eye, MousePointer, Clock, Globe, Loader2 } from "lucide-react";
+
+interface PageStats {
+  page_url: string;
+  count: number;
+}
 
 export default function Analytics() {
+  const [loading, setLoading] = useState(true);
+  const [pageViews, setPageViews] = useState(0);
+  const [uniqueUsers, setUniqueUsers] = useState(0);
+  const [topPages, setTopPages] = useState<PageStats[]>([]);
+  const [eventsByType, setEventsByType] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, []);
+
+  const fetchAnalytics = async () => {
+    try {
+      // Get total page views
+      const { count: totalViews } = await supabase
+        .from('analytics_events')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_type', 'page_view');
+
+      // Get unique users
+      const { data: uniqueUsersData } = await supabase
+        .from('analytics_events')
+        .select('user_id');
+      const unique = new Set(uniqueUsersData?.map(e => e.user_id).filter(Boolean)).size;
+
+      // Get top pages
+      const { data: pagesData } = await supabase
+        .from('analytics_events')
+        .select('page_url')
+        .eq('event_type', 'page_view');
+
+      const pageCounts: Record<string, number> = {};
+      pagesData?.forEach(event => {
+        if (event.page_url) {
+          pageCounts[event.page_url] = (pageCounts[event.page_url] || 0) + 1;
+        }
+      });
+
+      const sortedPages = Object.entries(pageCounts)
+        .map(([page_url, count]) => ({ page_url, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5);
+
+      // Get events by type
+      const { data: eventsData } = await supabase
+        .from('analytics_events')
+        .select('event_type');
+
+      const typeCounts: Record<string, number> = {};
+      eventsData?.forEach(event => {
+        typeCounts[event.event_type] = (typeCounts[event.event_type] || 0) + 1;
+      });
+
+      setPageViews(totalViews || 0);
+      setUniqueUsers(unique);
+      setTopPages(sortedPages);
+      setEventsByType(typeCounts);
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
+  const totalEvents = Object.values(eventsByType).reduce((a, b) => a + b, 0);
+
   return (
     <div className="space-y-6">
       <div>
@@ -18,10 +98,9 @@ export default function Analytics() {
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12,543</div>
-            <p className="text-xs text-muted-foreground flex items-center gap-1">
-              <TrendingUp className="h-3 w-3 text-green-600" />
-              +12.5% from last month
+            <div className="text-2xl font-bold">{pageViews.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">
+              Total page views tracked
             </p>
           </CardContent>
         </Card>
@@ -32,62 +111,22 @@ export default function Analytics() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3,821</div>
-            <p className="text-xs text-muted-foreground flex items-center gap-1">
-              <TrendingUp className="h-3 w-3 text-green-600" />
-              +8.2% from last month
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg. Session</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">3m 24s</div>
+            <div className="text-2xl font-bold">{uniqueUsers.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              Average time on site
+              Distinct users tracked
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Bounce Rate</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Events</CardTitle>
             <MousePointer className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">42.3%</div>
+            <div className="text-2xl font-bold">{totalEvents.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              -3.1% from last month
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Top Country</CardTitle>
-            <Globe className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">🇺🇸 USA</div>
-            <p className="text-xs text-muted-foreground">
-              34% of total traffic
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversion</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">4.8%</div>
-            <p className="text-xs text-muted-foreground">
-              Contact form submissions
+              All tracked events
             </p>
           </CardContent>
         </Card>
@@ -97,51 +136,54 @@ export default function Analytics() {
         <Card>
           <CardHeader>
             <CardTitle>Top Pages</CardTitle>
-            <CardDescription>Most visited pages this month</CardDescription>
+            <CardDescription>Most visited pages</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { page: "/", views: "3,245", percentage: "25.8%" },
-                { page: "/services", views: "2,891", percentage: "23.1%" },
-                { page: "/portfolio", views: "2,103", percentage: "16.8%" },
-                { page: "/blog", views: "1,876", percentage: "14.9%" },
-                { page: "/contact", views: "1,428", percentage: "11.4%" },
-              ].map((item) => (
-                <div key={item.page} className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="font-medium">{item.page}</div>
-                    <div className="text-sm text-muted-foreground">{item.views} views</div>
+              {topPages.length > 0 ? (
+                topPages.map((item) => (
+                  <div key={item.page_url} className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="font-medium">{item.page_url}</div>
+                      <div className="text-sm text-muted-foreground">{item.count} views</div>
+                    </div>
+                    <div className="text-sm font-medium">
+                      {((item.count / pageViews) * 100).toFixed(1)}%
+                    </div>
                   </div>
-                  <div className="text-sm font-medium">{item.percentage}</div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">No page view data yet</p>
+              )}
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Traffic Sources</CardTitle>
-            <CardDescription>Where your visitors come from</CardDescription>
+            <CardTitle>Event Types</CardTitle>
+            <CardDescription>Events tracked by type</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { source: "Organic Search", visitors: "1,834", percentage: "48%" },
-                { source: "Direct", visitors: "954", percentage: "25%" },
-                { source: "Social Media", visitors: "573", percentage: "15%" },
-                { source: "Referral", visitors: "306", percentage: "8%" },
-                { source: "Email", visitors: "154", percentage: "4%" },
-              ].map((item) => (
-                <div key={item.source} className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="font-medium">{item.source}</div>
-                    <div className="text-sm text-muted-foreground">{item.visitors} visitors</div>
-                  </div>
-                  <div className="text-sm font-medium">{item.percentage}</div>
-                </div>
-              ))}
+              {Object.entries(eventsByType).length > 0 ? (
+                Object.entries(eventsByType)
+                  .sort((a, b) => b[1] - a[1])
+                  .slice(0, 5)
+                  .map(([type, count]) => (
+                    <div key={type} className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="font-medium capitalize">{type.replace('_', ' ')}</div>
+                        <div className="text-sm text-muted-foreground">{count} events</div>
+                      </div>
+                      <div className="text-sm font-medium">
+                        {((count / totalEvents) * 100).toFixed(1)}%
+                      </div>
+                    </div>
+                  ))
+              ) : (
+                <p className="text-sm text-muted-foreground">No event data yet</p>
+              )}
             </div>
           </CardContent>
         </Card>

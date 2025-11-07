@@ -191,6 +191,42 @@ export type Database = {
         }
         Relationships: []
       }
+      security_events: {
+        Row: {
+          created_at: string
+          description: string
+          event_type: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          severity: string
+          user_email: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          severity: string
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          severity?: string
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       services: {
         Row: {
           active: boolean
@@ -293,6 +329,33 @@ export type Database = {
           user_email?: string
           user_id?: string | null
           user_name?: string
+        }
+        Relationships: []
+      }
+      system_logs: {
+        Row: {
+          created_at: string
+          id: string
+          log_level: string
+          message: string
+          metadata: Json | null
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          log_level: string
+          message: string
+          metadata?: Json | null
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          log_level?: string
+          message?: string
+          metadata?: Json | null
+          source?: string | null
         }
         Relationships: []
       }

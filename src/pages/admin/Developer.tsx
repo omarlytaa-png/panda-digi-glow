@@ -1,9 +1,50 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Code, Database, Server, FileCode, Terminal, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Database, Terminal, Loader2 } from "lucide-react";
+
+interface SystemLog {
+  id: string;
+  log_level: string;
+  message: string;
+  source: string | null;
+  created_at: string;
+}
 
 export default function Developer() {
+  const [loading, setLoading] = useState(true);
+  const [logs, setLogs] = useState<SystemLog[]>([]);
+
+  useEffect(() => {
+    fetchLogs();
+  }, []);
+
+  const fetchLogs = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('system_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (error) throw error;
+      setLogs(data || []);
+    } catch (error) {
+      console.error('Error fetching logs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -16,166 +57,82 @@ export default function Developer() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">API Status</CardTitle>
-            <Server className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">Healthy</div>
-            <p className="text-xs text-muted-foreground">Response time: 45ms</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Database</CardTitle>
+            <CardTitle className="text-sm font-medium">System Status</CardTitle>
             <Database className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">Online</div>
-            <p className="text-xs text-muted-foreground">Connections: 8/100</p>
+            <div className="text-2xl font-bold text-green-600">Healthy</div>
+            <p className="text-xs text-muted-foreground">All systems operational</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Cache</CardTitle>
-            <RefreshCw className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Total Logs</CardTitle>
+            <Terminal className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">95.2%</div>
-            <p className="text-xs text-muted-foreground">Hit rate</p>
+            <div className="text-2xl font-bold">{logs.length}</div>
+            <p className="text-xs text-muted-foreground">Recent log entries</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Uptime</CardTitle>
-            <Server className="h-4 w-4 text-green-600" />
+            <CardTitle className="text-sm font-medium">Error Rate</CardTitle>
+            <Badge variant="default">Low</Badge>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">99.9%</div>
-            <p className="text-xs text-muted-foreground">Last 30 days</p>
+            <div className="text-2xl font-bold">
+              {logs.filter(l => l.log_level === 'ERROR').length}
+            </div>
+            <p className="text-xs text-muted-foreground">Error logs</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">API Calls</CardTitle>
+            <Badge variant="secondary">Active</Badge>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {logs.filter(l => l.log_level === 'API').length}
+            </div>
+            <p className="text-xs text-muted-foreground">API log entries</p>
           </CardContent>
         </Card>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>API Keys</CardTitle>
-          <CardDescription>Manage your API keys and endpoints</CardDescription>
+          <CardTitle>Server Logs</CardTitle>
+          <CardDescription>Recent system activity</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-3">
-                <Code className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <div className="font-medium">Production API Key</div>
-                  <div className="text-sm text-muted-foreground font-mono">
-                    pk_live_••••••••••••••••
-                  </div>
+          <div className="space-y-2 font-mono text-sm max-h-[400px] overflow-y-auto">
+            {logs.length > 0 ? (
+              logs.map((log) => (
+                <div key={log.id} className="flex items-start gap-2 p-2 rounded bg-muted">
+                  <Badge 
+                    variant={
+                      log.log_level === 'ERROR' ? 'destructive' : 
+                      log.log_level === 'WARNING' ? 'secondary' : 
+                      'default'
+                    } 
+                    className="text-xs"
+                  >
+                    {log.log_level}
+                  </Badge>
+                  <span className="flex-1 text-xs">{log.message}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(log.created_at).toLocaleTimeString()}
+                  </span>
                 </div>
-              </div>
-              <Badge variant="outline" className="bg-green-50 text-green-700">Active</Badge>
-            </div>
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-3">
-                <Code className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <div className="font-medium">Development API Key</div>
-                  <div className="text-sm text-muted-foreground font-mono">
-                    pk_test_••••••••••••••••
-                  </div>
-                </div>
-              </div>
-              <Badge variant="outline" className="bg-blue-50 text-blue-700">Test</Badge>
-            </div>
-          </div>
-          <Button variant="outline" className="mt-4">
-            Generate New Key
-          </Button>
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Database Status</CardTitle>
-            <CardDescription>Monitor database performance</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Tables</span>
-                <span className="font-medium">12</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Total Records</span>
-                <span className="font-medium">5,482</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Storage Used</span>
-                <span className="font-medium">42.3 MB</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Active Connections</span>
-                <span className="font-medium">8</span>
-              </div>
-              <Button variant="outline" className="w-full">
-                <Database className="h-4 w-4 mr-2" />
-                View Database
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Server Logs</CardTitle>
-            <CardDescription>Recent server activity</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2 text-xs font-mono">
-              <div className="p-2 bg-muted rounded">
-                <span className="text-green-600">[INFO]</span> Server started on port 3000
-              </div>
-              <div className="p-2 bg-muted rounded">
-                <span className="text-blue-600">[API]</span> GET /api/users - 200 OK (45ms)
-              </div>
-              <div className="p-2 bg-muted rounded">
-                <span className="text-blue-600">[API]</span> POST /api/auth - 200 OK (120ms)
-              </div>
-              <div className="p-2 bg-muted rounded">
-                <span className="text-green-600">[INFO]</span> Cache refreshed successfully
-              </div>
-            </div>
-            <Button variant="outline" className="w-full mt-4">
-              <Terminal className="h-4 w-4 mr-2" />
-              View Full Logs
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Common developer tasks</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-3 md:grid-cols-3">
-            <Button variant="outline" className="justify-start">
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Clear Cache
-            </Button>
-            <Button variant="outline" className="justify-start">
-              <Database className="h-4 w-4 mr-2" />
-              Backup Database
-            </Button>
-            <Button variant="outline" className="justify-start">
-              <FileCode className="h-4 w-4 mr-2" />
-              View API Docs
-            </Button>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">No logs recorded yet</p>
+            )}
           </div>
         </CardContent>
       </Card>

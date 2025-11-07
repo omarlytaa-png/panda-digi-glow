@@ -1,10 +1,62 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Palette, Layout, Type, Image as ImageIcon, Save } from "lucide-react";
+import { Palette, Layout, Type, Image as ImageIcon, Save, Loader2 } from "lucide-react";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Appearance() {
+  const { toast } = useToast();
+  const { settings, loading, updateSetting } = useSiteSettings();
+  const [colors, setColors] = useState({
+    primary: '#3B82F6',
+    secondary: '#10B981',
+    accent: '#8B5CF6',
+  });
+  const [typography, setTypography] = useState({
+    headingFont: 'Inter',
+    bodyFont: 'Inter',
+    fontSize: '16px',
+  });
+  const [customCSS, setCustomCSS] = useState('');
+
+  useEffect(() => {
+    if (settings['appearance_colors' as any]) {
+      setColors(settings['appearance_colors' as any] as any);
+    }
+    if (settings['appearance_typography' as any]) {
+      setTypography(settings['appearance_typography' as any] as any);
+    }
+    if (settings['appearance_custom_css' as any]) {
+      setCustomCSS(settings['appearance_custom_css' as any] as string);
+    }
+  }, [settings]);
+
+  const handleSaveColors = async () => {
+    await updateSetting('appearance_colors' as any, colors);
+    toast({ title: "Colors saved successfully" });
+  };
+
+  const handleSaveTypography = async () => {
+    await updateSetting('appearance_typography' as any, typography);
+    toast({ title: "Typography saved successfully" });
+  };
+
+  const handleSaveCSS = async () => {
+    await updateSetting('appearance_custom_css' as any, customCSS);
+    toast({ title: "Custom CSS saved successfully" });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -30,10 +82,11 @@ export default function Appearance() {
                 <Input
                   id="primary-color"
                   type="color"
-                  defaultValue="#10B981"
+                  value={colors.primary}
+                  onChange={(e) => setColors({ ...colors, primary: e.target.value })}
                   className="w-20 h-10"
                 />
-                <Input defaultValue="#10B981" className="flex-1" />
+                <Input value={colors.primary} onChange={(e) => setColors({ ...colors, primary: e.target.value })} className="flex-1" />
               </div>
             </div>
             <div className="space-y-2">
@@ -42,10 +95,11 @@ export default function Appearance() {
                 <Input
                   id="secondary-color"
                   type="color"
-                  defaultValue="#3B82F6"
+                  value={colors.secondary}
+                  onChange={(e) => setColors({ ...colors, secondary: e.target.value })}
                   className="w-20 h-10"
                 />
-                <Input defaultValue="#3B82F6" className="flex-1" />
+                <Input value={colors.secondary} onChange={(e) => setColors({ ...colors, secondary: e.target.value })} className="flex-1" />
               </div>
             </div>
             <div className="space-y-2">
@@ -54,13 +108,14 @@ export default function Appearance() {
                 <Input
                   id="accent-color"
                   type="color"
-                  defaultValue="#8B5CF6"
+                  value={colors.accent}
+                  onChange={(e) => setColors({ ...colors, accent: e.target.value })}
                   className="w-20 h-10"
                 />
-                <Input defaultValue="#8B5CF6" className="flex-1" />
+                <Input value={colors.accent} onChange={(e) => setColors({ ...colors, accent: e.target.value })} className="flex-1" />
               </div>
             </div>
-            <Button>
+            <Button onClick={handleSaveColors}>
               <Save className="h-4 w-4 mr-2" />
               Save Colors
             </Button>
@@ -78,17 +133,17 @@ export default function Appearance() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="heading-font">Heading Font</Label>
-              <Input id="heading-font" defaultValue="Inter" />
+              <Input id="heading-font" value={typography.headingFont} onChange={(e) => setTypography({ ...typography, headingFont: e.target.value })} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="body-font">Body Font</Label>
-              <Input id="body-font" defaultValue="Inter" />
+              <Input id="body-font" value={typography.bodyFont} onChange={(e) => setTypography({ ...typography, bodyFont: e.target.value })} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="font-size">Base Font Size</Label>
-              <Input id="font-size" defaultValue="16px" />
+              <Input id="font-size" value={typography.fontSize} onChange={(e) => setTypography({ ...typography, fontSize: e.target.value })} />
             </div>
-            <Button>
+            <Button onClick={handleSaveTypography}>
               <Save className="h-4 w-4 mr-2" />
               Save Typography
             </Button>
@@ -178,8 +233,10 @@ export default function Appearance() {
   color: #10B981;
   font-weight: bold;
 }"
+              value={customCSS}
+              onChange={(e) => setCustomCSS(e.target.value)}
             />
-            <Button>
+            <Button onClick={handleSaveCSS}>
               <Save className="h-4 w-4 mr-2" />
               Save Custom CSS
             </Button>
