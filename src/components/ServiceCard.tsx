@@ -10,20 +10,20 @@ interface ServiceCardProps {
 
 const ServiceCard = ({ icon: Icon, title, description, features }: ServiceCardProps) => {
   return (
-    <Card className="shadow-card hover:shadow-hover transition-smooth group">
+    <Card className="shadow-card hover:shadow-hover hover:border-secondary/50 transition-all duration-300 group">
       <CardHeader>
-        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary group-hover:scale-110 transition-smooth">
-          <Icon className="text-primary group-hover:text-primary-foreground" size={24} />
+        <div className="w-14 h-14 bg-secondary/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-secondary group-hover:scale-110 group-hover:shadow-glow-blue transition-all duration-300">
+          <Icon className="text-secondary group-hover:text-secondary-foreground" size={28} />
         </div>
-        <CardTitle className="text-xl">{title}</CardTitle>
+        <CardTitle className="text-xl text-secondary">{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground mb-4">{description}</p>
         <ul className="space-y-2">
           {features.map((feature, index) => (
             <li key={index} className="flex items-start">
-              <span className="text-primary mr-2">✓</span>
-              <span className="text-sm">{feature}</span>
+              <span className="text-secondary mr-2 font-bold">✓</span>
+              <span className="text-sm text-foreground">{feature}</span>
             </li>
           ))}
         </ul>

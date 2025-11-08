@@ -8,25 +8,26 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 5%;
+    /* Dark Navy Background Theme */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 5%;
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 98%;
 
-    /* Blue as primary */
-    --primary: 217 91% 60%;
+    /* Red/Orange as primary (from screenshots) */
+    --primary: 0 100% 50%;
     --primary-foreground: 0 0% 100%;
 
-    /* Red accent as secondary */
-    --secondary: 0 84% 60%;
+    /* Blue accent as secondary */
+    --secondary: 217 91% 60%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 20% 65%;
 
     --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
@@ -34,72 +35,80 @@ All colors MUST be HSL.
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
+    --border: 217 33% 25%;
+    --input: 217 33% 25%;
     --ring: 217 91% 60%;
 
     --radius: 0.75rem;
 
+    /* Additional theme colors from screenshots */
+    --orange: 24 95% 53%;
+    --purple: 271 91% 65%;
+    --blue-glow: 217 91% 60%;
+
     /* Sidebar */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 5%;
-    --sidebar-primary: 217 91% 60%;
+    --sidebar-background: 217 33% 15%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 0 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 0 0% 5%;
-    --sidebar-border: 214 32% 91%;
+    --sidebar-accent: 217 33% 20%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 25%;
     --sidebar-ring: 217 91% 60%;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 70%));
-    --gradient-secondary: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 70%));
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 5%), hsl(217 91% 60% / 0.1));
+    --gradient-primary: linear-gradient(135deg, hsl(0 100% 50%), hsl(0 100% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 70%));
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 11% / 0.95), hsl(217 91% 60% / 0.2));
+    --gradient-glass: linear-gradient(135deg, hsl(217 33% 20% / 0.5), hsl(217 91% 60% / 0.1));
     
-    /* Shadows */
-    --shadow-card: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
-    --shadow-hover: 0 20px 25px -5px hsl(0 0% 0% / 0.1), 0 8px 10px -6px hsl(0 0% 0% / 0.1);
+    /* Shadows with glow effects */
+    --shadow-card: 0 4px 6px -1px hsl(0 0% 0% / 0.3), 0 2px 4px -2px hsl(0 0% 0% / 0.2);
+    --shadow-hover: 0 20px 25px -5px hsl(0 0% 0% / 0.4), 0 8px 10px -6px hsl(0 0% 0% / 0.3);
+    --shadow-glow-red: 0 0 20px hsl(0 100% 50% / 0.3);
+    --shadow-glow-blue: 0 0 20px hsl(217 91% 60% / 0.3);
     
     /* Animation */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 98%;
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 8%;
-    --card-foreground: 0 0% 98%;
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 217 91% 60%;
+    --primary: 0 100% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 84% 60%;
+    --secondary: 217 91% 60%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 0% 15%;
+    --muted: 217 33% 20%;
     --muted-foreground: 215 20% 65%;
 
     --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 63% 31%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
+    --border: 217 33% 25%;
+    --input: 217 33% 25%;
     --ring: 217 91% 60%;
 
     /* Sidebar Dark */
-    --sidebar-background: 0 0% 8%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 217 91% 60%;
+    --sidebar-background: 217 33% 15%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 0 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 15%;
+    --sidebar-accent: 217 33% 20%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 25%;
     --sidebar-ring: 217 91% 60%;
   }
 }
@@ -131,6 +140,12 @@ All colors MUST be HSL.
   .gradient-hero {
     background: var(--gradient-hero);
   }
+
+  .gradient-glass {
+    background: var(--gradient-glass);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
   
   .shadow-card {
     box-shadow: var(--shadow-card);
@@ -139,8 +154,47 @@ All colors MUST be HSL.
   .shadow-hover {
     box-shadow: var(--shadow-hover);
   }
+
+  .shadow-glow-red {
+    box-shadow: var(--shadow-glow-red);
+  }
+
+  .shadow-glow-blue {
+    box-shadow: var(--shadow-glow-blue);
+  }
   
   .transition-smooth {
     transition: var(--transition-smooth);
+  }
+
+  .text-gradient-red {
+    background: linear-gradient(135deg, hsl(0 100% 50%), hsl(24 95% 53%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 70%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-purple {
+    background: linear-gradient(135deg, hsl(271 91% 65%), hsl(271 91% 75%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .border-glow-red {
+    border: 2px solid hsl(0 100% 50%);
+    box-shadow: 0 0 15px hsl(0 100% 50% / 0.5);
+  }
+
+  .border-glow-blue {
+    border: 2px solid hsl(217 91% 60%);
+    box-shadow: 0 0 15px hsl(217 91% 60% / 0.5);
   }
 }

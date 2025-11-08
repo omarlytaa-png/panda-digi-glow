@@ -5,56 +5,56 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-black border-t-2 border-secondary">
+    <footer className="bg-black border-t-4 border-primary">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-glow-red">
                 <span className="text-2xl">🐼</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg">Panda Tech</span>
-                <span className="text-xs text-muted-foreground">Your Innovation Partner</span>
+                <span className="font-bold text-lg text-secondary">Panda Tech</span>
+                <span className="text-xs text-secondary/70">Your Innovation Partner</span>
               </div>
             </div>
-            <p className="text-sm text-primary">
+            <p className="text-sm text-secondary">
               We Design, Build, and Secure Your Digital World.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold mb-4 text-primary">Quick Links</h3>
+            <h3 className="font-semibold mb-4 text-secondary">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-sm text-primary hover:text-secondary transition-smooth">
+                <Link to="/" className="text-sm text-secondary/80 hover:text-secondary transition-smooth">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-sm text-primary hover:text-secondary transition-smooth">
+                <Link to="/about" className="text-sm text-secondary/80 hover:text-secondary transition-smooth">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/services" className="text-sm text-primary hover:text-secondary transition-smooth">
+                <Link to="/services" className="text-sm text-secondary/80 hover:text-secondary transition-smooth">
                   Services
                 </Link>
               </li>
               <li>
-                <Link to="/portfolio" className="text-sm text-primary hover:text-secondary transition-smooth">
+                <Link to="/portfolio" className="text-sm text-secondary/80 hover:text-secondary transition-smooth">
                   Portfolio
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-sm text-primary hover:text-secondary transition-smooth">
+                <Link to="/blog" className="text-sm text-secondary/80 hover:text-secondary transition-smooth">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-sm text-primary hover:text-secondary transition-smooth">
+                <Link to="/contact" className="text-sm text-secondary/80 hover:text-secondary transition-smooth">
                   Contact
                 </Link>
               </li>
@@ -63,8 +63,8 @@ const Footer = () => {
 
           {/* Services */}
           <div>
-            <h3 className="font-semibold mb-4 text-primary">Our Services</h3>
-            <ul className="space-y-2 text-sm text-primary">
+            <h3 className="font-semibold mb-4 text-secondary">Our Services</h3>
+            <ul className="space-y-2 text-sm text-secondary/80">
               <li>Web Development</li>
               <li>Software Solutions</li>
               <li>Graphic Design</li>
@@ -76,21 +76,21 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h3 className="font-semibold mb-4 text-primary">Contact Us</h3>
+            <h3 className="font-semibold mb-4 text-secondary">Contact Us</h3>
             <ul className="space-y-3">
-              <li className="flex items-start space-x-2 text-sm text-primary">
+              <li className="flex items-start space-x-2 text-sm text-secondary/80">
                 <MapPin size={16} className="mt-1 flex-shrink-0 text-secondary" />
                 <span>Precious Plaza, Kawangware<br />Naivasha Road, Nairobi, Kenya</span>
               </li>
-              <li className="flex items-center space-x-2 text-sm text-primary">
+              <li className="flex items-center space-x-2 text-sm text-secondary/80">
                 <Phone size={16} className="flex-shrink-0 text-secondary" />
                 <span>0111 679 286 / 0793 923 427</span>
               </li>
-              <li className="flex items-center space-x-2 text-sm text-primary">
+              <li className="flex items-center space-x-2 text-sm text-secondary/80">
                 <Mail size={16} className="flex-shrink-0 text-secondary" />
                 <span>info@labankhisa.co.ke</span>
               </li>
-              <li className="flex items-start space-x-2 text-sm text-primary">
+              <li className="flex items-start space-x-2 text-sm text-secondary/80">
                 <Clock size={16} className="mt-1 flex-shrink-0 text-secondary" />
                 <span>Mon–Sat: 8 AM – 6 PM</span>
               </li>
@@ -99,8 +99,8 @@ const Footer = () => {
         </div>
 
         {/* Social Links & Copyright */}
-        <div className="mt-8 pt-8 border-t-2 border-secondary flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <p className="text-sm text-primary">
+        <div className="mt-8 pt-8 border-t-2 border-primary flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          <p className="text-sm text-secondary">
             © {currentYear} Panda Tech. All rights reserved.
           </p>
           <div className="flex items-center space-x-4">
@@ -108,7 +108,7 @@ const Footer = () => {
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:text-secondary transition-smooth"
+              className="text-secondary hover:text-primary transition-smooth"
             >
               <Facebook size={20} />
             </a>
@@ -116,7 +116,7 @@ const Footer = () => {
               href="https://instagram.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:text-secondary transition-smooth"
+              className="text-secondary hover:text-primary transition-smooth"
             >
               <Instagram size={20} />
             </a>
@@ -124,7 +124,7 @@ const Footer = () => {
               href="https://linkedin.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:text-secondary transition-smooth"
+              className="text-secondary hover:text-primary transition-smooth"
             >
               <Linkedin size={20} />
             </a>
@@ -132,7 +132,7 @@ const Footer = () => {
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:text-secondary transition-smooth"
+              className="text-secondary hover:text-primary transition-smooth"
             >
               <Twitter size={20} />
             </a>
