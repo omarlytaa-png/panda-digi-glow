@@ -40,7 +40,7 @@ const Navbar = () => {
               <span className="text-2xl">🐼</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-xl text-primary">LK.</span>
+              <span className="font-bold text-xl text-secondary">PANDA TECH</span>
             </div>
           </Link>
 

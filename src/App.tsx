@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { usePageTracking } from "./hooks/usePageTracking";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -32,6 +33,50 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const AppRoutes = () => {
+  usePageTracking();
+  
+  return (
+    <Routes>
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Overview />} />
+        <Route path="users" element={<UserManagement />} />
+        <Route path="content" element={<ContentManagement />} />
+        <Route path="services" element={<ServicesManagement />} />
+        <Route path="portfolio" element={<PortfolioManagement />} />
+        <Route path="testimonials" element={<TestimonialsManagement />} />
+        <Route path="analytics" element={<Analytics />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="security" element={<Security />} />
+        <Route path="developer" element={<Developer />} />
+        <Route path="support" element={<Support />} />
+        <Route path="appearance" element={<Appearance />} />
+        <Route path="advanced" element={<Advanced />} />
+      </Route>
+      <Route
+        path="/*"
+        element={
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogPost />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/profile" element={<Profile />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        }
+      />
+    </Routes>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -39,45 +84,9 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-        <Routes>
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Overview />} />
-            <Route path="users" element={<UserManagement />} />
-            <Route path="content" element={<ContentManagement />} />
-            <Route path="services" element={<ServicesManagement />} />
-            <Route path="portfolio" element={<PortfolioManagement />} />
-            <Route path="testimonials" element={<TestimonialsManagement />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="security" element={<Security />} />
-            <Route path="developer" element={<Developer />} />
-            <Route path="support" element={<Support />} />
-            <Route path="appearance" element={<Appearance />} />
-            <Route path="advanced" element={<Advanced />} />
-          </Route>
-          <Route
-            path="/*"
-            element={
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/services" element={<Services />} />
-                  <Route path="/portfolio" element={<Portfolio />} />
-                  <Route path="/blog" element={<Blog />} />
-                  <Route path="/blog/:id" element={<BlogPost />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/profile" element={<Profile />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Layout>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+          <AppRoutes />
+        </BrowserRouter>
+      </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

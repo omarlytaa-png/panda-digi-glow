@@ -58,21 +58,40 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
+      {/* Animated Hero Section with Parallax */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+        {/* Animated Gradient Background */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background"></div>
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-0 -left-4 w-96 h-96 bg-primary rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+            <div className="absolute top-0 -right-4 w-96 h-96 bg-secondary rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+            <div className="absolute -bottom-8 left-20 w-96 h-96 bg-accent rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+          </div>
+        </div>
+        
+        {/* Background Image with Parallax Effect */}
         <div
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 opacity-20"
           style={{
-            backgroundImage: `linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(16, 185, 129, 0.2)), url(${heroImage})`,
+            backgroundImage: `url(${heroImage})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
+            transform: "translateZ(0)",
           }}
         />
+        
+        {/* Overlay Gradient */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-background/80 via-background/60 to-background"></div>
+        
+        {/* Content */}
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in">
-            We Design, Build, and Secure<br />Your Digital World
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-fade-in">
+            <span className="text-gradient-red">We Design, Build,</span>
+            <br />
+            <span className="text-gradient-blue">and Secure Your Digital World</span>
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto animate-fade-in">
+          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto animate-fade-in">
             Kenya's premier technology and design partner for innovative businesses
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
@@ -81,7 +100,7 @@ const Home = () => {
                 Get a Quote <ArrowRight className="ml-2" size={20} />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 bg-white/10 backdrop-blur-sm text-white border-white hover:bg-white hover:text-foreground" asChild>
+            <Button size="lg" variant="glass" className="text-lg px-8" asChild>
               <Link to="/portfolio">View Our Work</Link>
             </Button>
           </div>

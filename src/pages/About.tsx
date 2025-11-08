@@ -25,16 +25,31 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      <div className="container mx-auto px-4">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">About Panda Tech</h1>
+    <div className="min-h-screen">
+      {/* Animated Hero Section with Parallax */}
+      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-24 pb-16">
+        {/* Animated Gradient Background */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background"></div>
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 left-0 w-72 h-72 bg-secondary rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+            <div className="absolute top-0 right-0 w-72 h-72 bg-primary rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+            <div className="absolute bottom-0 left-1/2 w-72 h-72 bg-accent rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="container mx-auto px-4 relative z-10 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <span className="text-gradient-blue">About</span> <span className="text-gradient-red">Panda Tech</span>
+          </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Your trusted technology and design partner in Kenya, committed to transforming ideas into reality
           </p>
         </div>
+      </section>
 
+      <div className="container mx-auto px-4 pb-16">
         {/* Company Story */}
         <section className="mb-20">
           <div className="max-w-4xl mx-auto">

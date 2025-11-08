@@ -11,6 +11,9 @@ export default function Overview() {
     moderators: 0,
     recentSignups: 0,
     totalPosts: 0,
+    totalViews: 0,
+    totalVisitors: 0,
+    weeklyViews: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -20,11 +23,11 @@ export default function Overview() {
 
   const fetchStats = async () => {
     try {
-      const [profilesRes, rolesRes, postsRes, ticketsRes] = await Promise.all([
+      const [profilesRes, rolesRes, postsRes, analyticsRes] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact" }),
         supabase.from("user_roles").select("*"),
         supabase.from("blog_posts").select("*", { count: "exact" }),
-        supabase.from("support_tickets").select("*", { count: "exact" }).eq('status', 'open'),
+        supabase.from("analytics_events").select("*", { count: "exact" }),
       ]);
 
       const sevenDaysAgo = new Date();
@@ -35,12 +38,29 @@ export default function Overview() {
         .select("*", { count: "exact" })
         .gte("created_at", sevenDaysAgo.toISOString());
 
+      const weeklyAnalytics = await supabase
+        .from("analytics_events")
+        .select("*", { count: "exact" })
+        .eq("event_type", "page_view")
+        .gte("created_at", sevenDaysAgo.toISOString());
+
+      // Get unique visitors (by user_id) for total visitors
+      const allVisitors = await supabase
+        .from("analytics_events")
+        .select("user_id")
+        .eq("event_type", "page_view");
+
+      const uniqueVisitors = new Set(allVisitors.data?.filter(v => v.user_id).map(v => v.user_id) || []).size;
+
       setStats({
         totalUsers: profilesRes.count || 0,
         admins: rolesRes.data?.filter((r) => r.role === "admin").length || 0,
         moderators: rolesRes.data?.filter((r) => r.role === "moderator").length || 0,
         recentSignups: recentUsers.count || 0,
         totalPosts: postsRes.count || 0,
+        totalViews: analyticsRes.count || 0,
+        totalVisitors: uniqueVisitors,
+        weeklyViews: weeklyAnalytics.count || 0,
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
@@ -66,7 +86,31 @@ export default function Overview() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalViews.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">
+              +{stats.weeklyViews} this week
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Visitors</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalVisitors.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Unique visitors tracked</p>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
