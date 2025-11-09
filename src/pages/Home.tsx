@@ -111,7 +111,7 @@ const Home = () => {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Services</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-3d">Our Services</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Comprehensive technology solutions tailored to your business needs
             </p>
@@ -133,7 +133,7 @@ const Home = () => {
       <section className="py-20 bg-muted">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Panda Tech?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-3d">Why Choose Panda Tech?</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               We're committed to delivering excellence in every project
             </p>
@@ -156,7 +156,7 @@ const Home = () => {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Projects</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-3d">Our Work</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               See what we've created for our amazing clients
             </p>
@@ -184,7 +184,7 @@ const Home = () => {
       <section className="py-20 bg-muted">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">What Our Clients Say</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-3d">What Our Clients Say</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Don't just take our word for it
             </p>
@@ -209,7 +209,7 @@ const Home = () => {
       {/* CTA Section */}
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Start Your Project?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-3d">Get In Touch</h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
             Let's bring your ideas to life with our expert team
           </p>

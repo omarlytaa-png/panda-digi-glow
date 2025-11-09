@@ -225,4 +225,36 @@ All colors MUST be HSL.
   .animation-delay-4000 {
     animation-delay: 4s;
   }
+
+  /* 3D Text Effects */
+  .text-3d {
+    text-shadow: 
+      1px 1px 0 hsl(var(--primary)),
+      2px 2px 0 hsl(var(--primary)),
+      3px 3px 0 hsl(var(--primary)),
+      4px 4px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .text-3d-gold {
+    text-shadow: 
+      1px 1px 0 #d4af37,
+      2px 2px 0 #d4af37,
+      3px 3px 0 #d4af37,
+      4px 4px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .text-3d-secondary {
+    text-shadow: 
+      1px 1px 0 hsl(var(--secondary)),
+      2px 2px 0 hsl(var(--secondary)),
+      3px 3px 0 hsl(var(--secondary)),
+      4px 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  h1, h2, h3 {
+    text-shadow: 
+      1px 1px 0 rgba(255, 68, 68, 0.3),
+      2px 2px 0 rgba(255, 68, 68, 0.2),
+      3px 3px 5px rgba(0, 0, 0, 0.3);
+  }
 }
