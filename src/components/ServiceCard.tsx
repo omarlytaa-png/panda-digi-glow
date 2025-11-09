@@ -1,5 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { use3DTilt } from "@/hooks/use3DTilt";
 
 interface ServiceCardProps {
   icon: LucideIcon;
@@ -9,15 +10,25 @@ interface ServiceCardProps {
 }
 
 const ServiceCard = ({ icon: Icon, title, description, features }: ServiceCardProps) => {
+  const { ref, handlers } = use3DTilt({ max: 12, scale: 1.04 });
+
   return (
-    <Card className="shadow-card hover:shadow-hover hover:border-secondary/50 transition-all duration-300 group">
-      <CardHeader>
-        <div className="w-14 h-14 bg-secondary/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-secondary group-hover:scale-110 group-hover:shadow-glow-blue transition-all duration-300">
+    <Card 
+      ref={ref}
+      {...handlers}
+      className="shadow-card hover:shadow-hover hover:border-secondary/50 transition-shadow duration-300 group"
+      style={{ transformStyle: 'preserve-3d' }}
+    >
+      <CardHeader style={{ transform: 'translateZ(30px)' }}>
+        <div 
+          className="w-14 h-14 bg-secondary/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-secondary group-hover:shadow-glow-blue transition-all duration-300"
+          style={{ transform: 'translateZ(20px)' }}
+        >
           <Icon className="text-secondary group-hover:text-secondary-foreground" size={28} />
         </div>
         <CardTitle className="text-xl text-secondary">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent style={{ transform: 'translateZ(20px)' }}>
         <p className="text-muted-foreground mb-4">{description}</p>
         <ul className="space-y-2">
           {features.map((feature, index) => (
