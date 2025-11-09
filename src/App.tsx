@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { usePageTracking } from "./hooks/usePageTracking";
 import Layout from "./components/Layout";
+import WhatsAppButton from "./components/WhatsAppButton";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -85,6 +86,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <AppRoutes />
+          <WhatsAppButton />
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

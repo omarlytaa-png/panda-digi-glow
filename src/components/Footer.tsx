@@ -5,7 +5,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white border-t-4 border-primary">
+    <footer className="bg-black border-t-4 border-primary">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -15,11 +15,11 @@ const Footer = () => {
                 <span className="text-2xl">🐼</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg text-gray-900">Panda Tech</span>
-                <span className="text-xs text-gray-600">Your Innovation Partner</span>
+                <span className="font-bold text-lg text-white">Panda Tech</span>
+                <span className="text-xs text-gray-400">Your Innovation Partner</span>
               </div>
             </div>
-            <p className="text-sm text-gray-700">
+            <p className="text-sm text-gray-300">
               We Design, Build, and Secure Your Digital World.
             </p>
           </div>
@@ -29,32 +29,32 @@ const Footer = () => {
             <h3 className="font-semibold mb-4 text-3d-gold" style={{ color: '#d4af37' }}>Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-sm text-gray-600 hover:text-primary transition-smooth">
+                <Link to="/" className="text-sm text-gray-400 hover:text-primary transition-smooth">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-sm text-gray-600 hover:text-primary transition-smooth">
+                <Link to="/about" className="text-sm text-gray-400 hover:text-primary transition-smooth">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/services" className="text-sm text-gray-600 hover:text-primary transition-smooth">
+                <Link to="/services" className="text-sm text-gray-400 hover:text-primary transition-smooth">
                   Services
                 </Link>
               </li>
               <li>
-                <Link to="/portfolio" className="text-sm text-gray-600 hover:text-primary transition-smooth">
+                <Link to="/portfolio" className="text-sm text-gray-400 hover:text-primary transition-smooth">
                   Portfolio
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-sm text-gray-600 hover:text-primary transition-smooth">
+                <Link to="/blog" className="text-sm text-gray-400 hover:text-primary transition-smooth">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-sm text-gray-600 hover:text-primary transition-smooth">
+                <Link to="/contact" className="text-sm text-gray-400 hover:text-primary transition-smooth">
                   Contact
                 </Link>
               </li>
@@ -64,7 +64,7 @@ const Footer = () => {
           {/* Services */}
           <div>
             <h3 className="font-semibold mb-4 text-3d-gold" style={{ color: '#d4af37' }}>Our Services</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <ul className="space-y-2 text-sm text-gray-400">
               <li>Web Development</li>
               <li>Software Solutions</li>
               <li>Graphic Design</li>
@@ -78,19 +78,19 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4 text-3d-gold" style={{ color: '#d4af37' }}>Contact Us</h3>
             <ul className="space-y-3">
-              <li className="flex items-start space-x-2 text-sm text-gray-600">
+              <li className="flex items-start space-x-2 text-sm text-gray-400">
                 <MapPin size={16} className="mt-1 flex-shrink-0 text-primary" />
                 <span>Precious Plaza, Kawangware<br />Naivasha Road, Nairobi, Kenya</span>
               </li>
-              <li className="flex items-center space-x-2 text-sm text-gray-600">
+              <li className="flex items-center space-x-2 text-sm text-gray-400">
                 <Phone size={16} className="flex-shrink-0 text-primary" />
                 <span>0111 679 286 / 0793 923 427</span>
               </li>
-              <li className="flex items-center space-x-2 text-sm text-gray-600">
+              <li className="flex items-center space-x-2 text-sm text-gray-400">
                 <Mail size={16} className="flex-shrink-0 text-primary" />
                 <span>info@labankhisa.co.ke</span>
               </li>
-              <li className="flex items-start space-x-2 text-sm text-gray-600">
+              <li className="flex items-start space-x-2 text-sm text-gray-400">
                 <Clock size={16} className="mt-1 flex-shrink-0 text-primary" />
                 <span>Mon–Sat: 8 AM – 6 PM</span>
               </li>
@@ -100,7 +100,7 @@ const Footer = () => {
 
         {/* Social Links & Copyright */}
         <div className="mt-8 pt-8 border-t-2 border-primary flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-gray-400">
             © {currentYear} Panda Tech. All rights reserved.
           </p>
           <div className="flex items-center space-x-4">
@@ -108,7 +108,7 @@ const Footer = () => {
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-700 hover:text-primary transition-smooth"
+              className="text-gray-400 hover:text-primary transition-smooth"
             >
               <Facebook size={20} />
             </a>
@@ -116,7 +116,7 @@ const Footer = () => {
               href="https://instagram.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-700 hover:text-primary transition-smooth"
+              className="text-gray-400 hover:text-primary transition-smooth"
             >
               <Instagram size={20} />
             </a>
@@ -124,7 +124,7 @@ const Footer = () => {
               href="https://linkedin.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-700 hover:text-primary transition-smooth"
+              className="text-gray-400 hover:text-primary transition-smooth"
             >
               <Linkedin size={20} />
             </a>
@@ -132,7 +132,7 @@ const Footer = () => {
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-700 hover:text-primary transition-smooth"
+              className="text-gray-400 hover:text-primary transition-smooth"
             >
               <Twitter size={20} />
             </a>
