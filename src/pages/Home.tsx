@@ -60,29 +60,6 @@ const Home = () => {
     <div className="min-h-screen">
       {/* Animated Hero Section with Parallax */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Animated Gradient Background */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background"></div>
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-0 -left-4 w-96 h-96 bg-primary rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-            <div className="absolute top-0 -right-4 w-96 h-96 bg-secondary rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-            <div className="absolute -bottom-8 left-20 w-96 h-96 bg-accent rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
-          </div>
-        </div>
-        
-        {/* Background Image with Parallax Effect */}
-        <div
-          className="absolute inset-0 z-0 opacity-20"
-          style={{
-            backgroundImage: `url(${heroImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            transform: "translateZ(0)",
-          }}
-        />
-        
-        {/* Overlay Gradient */}
-        <div className="absolute inset-0 z-0 bg-gradient-to-b from-background/80 via-background/60 to-background"></div>
         
         {/* Content */}
         <div className="container mx-auto px-4 relative z-10 text-center">
@@ -108,7 +85,7 @@ const Home = () => {
       </section>
 
       {/* Services Overview */}
-      <section className="py-20 bg-background">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-3d">Our Services</h2>
@@ -130,7 +107,7 @@ const Home = () => {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-20 bg-muted">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-3d">Why Choose Panda Tech?</h2>
@@ -142,7 +119,7 @@ const Home = () => {
             {reasons.map((reason, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-3 bg-background p-4 rounded-lg shadow-card"
+                className="flex items-center space-x-3 glass-clean p-4 rounded-lg"
               >
                 <CheckCircle className="text-primary flex-shrink-0" size={24} />
                 <span className="font-medium">{reason}</span>
@@ -153,7 +130,7 @@ const Home = () => {
       </section>
 
       {/* Featured Projects */}
-      <section className="py-20 bg-background">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-3d">Our Work</h2>
@@ -181,7 +158,7 @@ const Home = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-muted">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-3d">What Our Clients Say</h2>
@@ -193,7 +170,7 @@ const Home = () => {
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className="bg-background p-8 rounded-lg shadow-card"
+                className="glass-clean p-8 rounded-lg"
               >
                 <p className="text-lg mb-6 italic">"{testimonial.content}"</p>
                 <div>
@@ -207,13 +184,13 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
+      <section className="py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-3d">Get In Touch</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+          <p className="text-xl mb-8 max-w-2xl mx-auto text-foreground">
             Let's bring your ideas to life with our expert team
           </p>
-          <Button size="lg" variant="secondary" className="text-lg px-8" asChild>
+          <Button size="lg" className="text-lg px-8" asChild>
             <Link to="/contact">
               Contact Us Today <ArrowRight className="ml-2" size={20} />
             </Link>
